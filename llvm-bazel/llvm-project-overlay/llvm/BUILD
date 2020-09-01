@@ -20,9 +20,6 @@ llvm_copts = [
     "$(STACK_FRAME_UNLIMITED)",
     "-Wno-unused-parameter",
     "-Wno-comment",
-    "-Wno-class-memaccess",
-    "-Wno-maybe-uninitialized",
-    "-Wno-misleading-indentation",
 ]
 
 llvm_targets = [
@@ -420,7 +417,7 @@ template_rule(
         "#cmakedefine HAVE_SYS_TYPES_H ${HAVE_SYS_TYPES_H}": "#define HAVE_SYS_TYPES_H 1",
 
         # Define if the setupterm() function is supported this platform.
-        "#cmakedefine HAVE_TERMINFO ${HAVE_TERMINFO}": "#define HAVE_TERMINFO 1",
+        "#cmakedefine HAVE_TERMINFO ${HAVE_TERMINFO}": "/* #undef HAVE_TERMINFO */",
 
         # Define if the xar_open() function is supported this platform.
         "#cmakedefine HAVE_LIBXAR ${HAVE_LIBXAR}": "/* #undef HAVE_LIBXAR */",
@@ -635,8 +632,6 @@ cc_library(
     copts = llvm_copts,
     includes = ["include"],
     linkopts = [
-        "-lz",
-        "-ltinfo",
         "-pthread",
     ],
     textual_hdrs = glob([
@@ -645,6 +640,7 @@ cc_library(
     deps = [
         ":Demangle",
         ":config",
+        "@zlib",
     ],
 )
 
